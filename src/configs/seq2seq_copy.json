@@ -1,0 +1,45 @@
+{
+  "dataset_reader": {
+    "target_namespace": "target_tokens",
+    "type": "copynet_seq2seq_bert"
+  },
+  "vocabulary": {
+    "min_count": {
+      "bert": 4,
+      "target_tokens": 4
+    }
+  },
+  "train_data_path": "snips/train.tsv",
+  "validation_data_path": "snips/val.tsv",
+  "model": {
+    "type": "copynet_seq2seq_bert",
+    "attention": {
+      "type": "bilinear",
+      "vector_dim": 768,
+      "matrix_dim": 768
+    },
+    "target_embedding_dim": 128,
+    "beam_size": 3,
+    "max_decoding_steps": 20
+  },
+  "iterator": {
+    "type": "bucket",
+    "padding_noise": 0.0,
+    "batch_size" : 32,
+    "sorting_keys": [["source_tokens", "num_tokens"]]
+  },
+  "trainer": {
+    "optimizer": {
+      "type": "bert_adam",
+      "lr": 2e-5,
+      "warmup": 0.1,
+      "t_total": 290
+    },
+    "num_epochs": 30,
+    "cuda_device": -1,
+    "should_log_learning_rate": true,
+    "should_log_parameter_statistics": false,
+    "validation_metric": "+bleu",
+    "patience": 2
+  }
+}
